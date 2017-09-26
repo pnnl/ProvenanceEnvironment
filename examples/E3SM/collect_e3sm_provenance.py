@@ -28,10 +28,12 @@ def get_desc_sim_schema():
             
     fosd.write("_BEGIN_SCHEMA\n")
     fosd.write("node=wfpp:Simulation\n")
+    fosd.write("format=_PARAMETERS\n")
     fosd.write("column,dataType,constraint\n")
     fosd.write("name,,primaryKey\n")
     fosd.write("compset,,\n")
     fosd.write("res,,\n")
+    fosd.write("github_hashkey,,\n")
     fosd.write("machine,,\n")
     fosd.write("compiler,,\n")
     fosd.write("script_name,,\n")
