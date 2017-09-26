@@ -312,8 +312,8 @@ def find_simulation_name(rootdir):
 
     
 
-parser = argparse.ArgumentParser(description='Extract provenancefr om acme simulation and produce messages')
-parser.add_argument('--acmedir', help='acme simulation top directory')
+parser = argparse.ArgumentParser(description='Extract provenance from e3sm simulation and produce messages')
+parser.add_argument('--e3smdir', help='e3sm simulation top directory')
 parser.add_argument('--outputdir', help='directory where messages are produced')
 
 args = parser.parse_args()

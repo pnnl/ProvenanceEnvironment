@@ -144,10 +144,10 @@ def query_proven(simulation_name,url):
 
 if (len(sys.argv) < 3):
     print "No arguments provided.  Usage:"
-    print "retrieve_acme_provenance --simname=<Simulation Name>   --targetdir=<Location for reconstructed files> --server=<http://<hostname>:<portnumber>"
+    print "retrieve_e3sm_provenance --simname=<Simulation Name>   --targetdir=<Location for reconstructed files> --server=<http://<hostname>:<portnumber>"
     exit(0)
     
-parser = argparse.ArgumentParser(description='Return ACME provenance and required files for rerunning simulation')
+parser = argparse.ArgumentParser(description='Return E3SM provenance and required files for rerunning simulation')
 parser.add_argument('--simname', help='simulation name')
 parser.add_argument('--server', help='proven server url')
 parser.add_argument('--targetdir', help='destination directory of reconstructed files')
