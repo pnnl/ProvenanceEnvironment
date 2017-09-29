@@ -24,6 +24,13 @@ def get_desc_sim_message_header():
     fosd.write("_END\n")
     fosd.write("#\n")
 
+def get_sim_timinglogs_message_header():
+    foso.write("_BEGIN_MESSAGE\n")
+    foso.write("name=DescribeSimulationTimingLogsMessage\n")
+    foso.write("domain=acme\n")
+    foso.write("_END\n")
+    foso.write("#\n")
+
 def get_desc_sim_schema():
             
     fosd.write("_BEGIN_SCHEMA\n")
@@ -37,6 +44,8 @@ def get_desc_sim_schema():
     fosd.write("machine,,\n")
     fosd.write("compiler,,\n")
     fosd.write("script_name,,\n")
+    fosd.write("run_date,,\n")
+    fosd.write("author,,\n")
     fosd.write("_END\n")
     fosd.write("#\n")
      
@@ -64,6 +73,35 @@ def get_inputdeck_schema():
     fosi.write("filepath,FILE,\n")
     fosi.write("_END\n")
 
+
+def get_simulation_timinglogs_schema():
+            
+    foso.write("_BEGIN_SCHEMA\n")
+    foso.write("node=wfpp:LogFile\n")
+    foso.write("format=_TABLE\n")
+    foso.write("column,dataType,constraint\n")
+    foso.write("name,,primaryKey\n")
+    foso.write("prov:wasGeneratedBy,,referenceNode\n")
+    foso.write("type,,\n")
+    foso.write("filename,,\n")
+    foso.write("parentdirectory,,\n")
+    foso.write("filepath,FILE,\n")
+    foso.write("_END\n")
+    foso.write("#\n")
+
+
+def get_inputdeck_schema():
+    fosi.write("_BEGIN_SCHEMA\n")
+    fosi.write("node=wfpp:InputDeck\n")
+    fosi.write("format=_TABLE\n")
+    fosi.write("column,dataType,constraint\n")
+    fosi.write("name,,primaryKey\n")
+    fosi.write("type,,\n")
+    fosi.write("filename,,\n")
+    fosi.write("parentdirectory,,\n")
+    fosi.write("filepath,FILE,\n")
+    fosi.write("_END\n")
+
 def build_desc_sim_content():
     fosd.write("_BEGIN_CONTENT\n")
     fosd.write("node=wfpp:Simulation\n")
@@ -74,6 +112,8 @@ def build_desc_sim_content():
     fosd.write("machine="+ get_machine(rootdir) + "\n")
     fosd.write("compiler=" + get_compiler(rootdir) + "\n")
     fosd.write("script_name=" + find_run_acme_name(rootdir) + "\n")
+    fosd.write("run_date=" + get_simulation_run_date(rootdir) + "\n")
+    fosd.write("author=" + get_author(rootdir) + "\n")
     fosd.write("_END\n")
     fosd.write("#\n")
 
@@ -96,14 +136,20 @@ def build_simulation_input_content():
         element = str(element)
         if (element.find("user_nl") != -1) :
             fosi.write(simulation + ",wfpp:InputDeck?name=" + simulation + element + "\n")
-                        
+    
     simroot =  rootdir + "/" +simulation + "/case_scripts"
     onlyfiles = [f for f in listdir(simroot) if isfile(join(simroot, f))]
     for element in onlyfiles:
         element = str(element)
         if (element.find(".xml") != -1) :
             fosi.write(simulation + ",wfpp:InputDeck?name=" + simulation + element + "\n")
-
+    
+    #
+    # Add acme_run file
+    #
+    run_acme_name = find_run_acme_name(rootdir)
+    fosi.write(simulation + ",wfpp:InputDeck?name=" + simulation + run_acme_name + "\n")
+    
     #
     #  Find the settings directory
     #
@@ -141,7 +187,7 @@ def build_inputdeck_content():
     for element in onlyfiles:       
         if (element.find("user_nl") != -1) :
             type = "namelist"
-            filecontents = get_filelob(simroot + "/" + element, False)
+            filecontents = get_filelob(join(simroot,element), False)
             fosi.write(simulation + element  + ","  + type + "," + element + "," + parentdir + "," + filecontents + "\n")
 
     
@@ -171,12 +217,52 @@ def build_inputdeck_content():
             type = "compressed archive"
             filecontents = get_filelob(join(perfdir,element),True)
             fosi.write(simulation + element  + ","  + type + "," +element + "," + "performance_archive" + "," + filecontents + "\n")  
+    #
+    # Get the run_acme script file
+    #
+    parentdir = "case_scripts"
+    run_acme_name = find_run_acme_name(rootdir)
+    run_acme_parent_dir = get_run_acme_parent_dir(rootdir)
+    full_run_acme_dir_path = join(run_acme_parent_dir,run_acme_name)
+    filecontents=get_filelob(full_run_acme_dir_path,False)
+    fosi.write(simulation + run_acme_name  + ","  + "script" + "," +run_acme_name + "," + parentdir + "," + filecontents + "\n")  
     fosi.write("_END\n")
 
 #
 # Methods for associating input files to simulation.
 #    
 
+
+def build_timing_content():
+    foso.write("_BEGIN_CONTENT\n") 
+    foso.write("node=wfpp:LogFile\n" )
+    simulation= find_simulation_name(rootdir)
+    
+    simulation= find_simulation_name(rootdir)
+    parentdir = "run"
+    simroot = join(simulation,parentdir)
+    simroot = join(rootdir,simroot)
+    
+    foso.write("name" + "," + "prov:wasGeneratedBy" + "," + "type" + "," + "filename" +  "," + "parentdirectory" + "," + "filepath\n")
+    onlyfiles = [f for f in listdir(simroot) if isfile(join(simroot, f))]
+    for element in onlyfiles:
+        element = str(element)
+        if (element.find("timing") != -1) :
+            if (element.find("tar.gz") != -1):
+                type = "timingfiles"
+                filecontents = get_filelob(join(simroot,element),True)
+                foso.write(simulation + element +  ",wfpp:Simulation?name=" + simulation + "," + type + ","  + element + "," + parentdir + "," + filecontents + "\n")
+
+    onlyfiles = [f for f in listdir(simroot) if isfile(join(simroot, f))]
+    for element in onlyfiles:
+        element = str(element)
+        if (element.find("log") != -1) :
+            if (element.find(".gz") != -1):
+                type = "logfiles"
+                filecontents = get_filelob(join(simroot,element),True)
+                foso.write(simulation + element +  ",wfpp:Simulation?name=" + simulation + "," + type + ","  + element + "," + parentdir + "," + filecontents + "\n")
+                
+    foso.write("_END\n")
 
 def find_performance_archive_vars_dir(rootdir):
     perf_dir = join(rootdir,"performance_archive")
@@ -289,6 +375,26 @@ if (len(sys.argv) < 2):
     print "collect_e3sm_provenance --e3smdir=<e3sm simulation top level directory>  --outputdir=<output target directory>"
     exit(0)
 
+def get_run_acme_parent_dir(rootdir):
+    result = ""
+    parentdir = join(rootdir,find_simulation_name(rootdir))
+    parentdir = join(parentdir,"case_scripts")
+    parentdir = join(parentdir,"run_script_provenance")
+    return parentdir
+
+def get_simulation_run_date(rootdir):
+    return ""
+
+def get_author(rootdir):
+    return ""
+
+
+if (len(sys.argv) < 2):
+    print "No arguments provided.  Usage:"
+    print "collect_e3sm_provenance --e3smdir=<e3sm simulation top level directory>  --outputdir=<output target directory>"
+    exit(0)
+
+
 #
 # General methods to build messages
 #
@@ -326,7 +432,7 @@ outdir = args.outputdir
 
 fosd = open(join(outdir,"exported_e3sm_metadata_msg.proven.csv"),'w')
 fosi = open(join(outdir,"exported_e3sm_input_files_msg.proven.csv"),'w')
-
+foso = open(join(outdir,"exported_e3sm_output_files_msg.proven.csv"),'w')
 ##
 ## Build message that describes information about the simualtion
 ##
@@ -344,5 +450,14 @@ get_inputdeck_schema()
 build_simulation_input_content()
 build_inputdeck_content()
 print "Writing..." + join(outdir,"exported_e3sm_input_files_msg.proven.csv")
+
+##
+## Build message that builds relationships between output from the simulation and the simulation.
+##
+get_sim_timinglogs_message_header()
+get_simulation_timinglogs_schema()
+build_timing_content()
+print "Writing..." + join(outdir,"exported_e3sm_output_files_msg.proven.csv")
 fosi.close()
 fosd.close()
+foso.close()

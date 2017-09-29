@@ -107,7 +107,7 @@ def retrieve_description(simulation_name,url):
 
 
 
-def query_proven(simulation_name,url):
+def get_sim_desc_input(simulation_name,url):
 
     query = """ SELECT ?simname ?idname ?filename ?parentdirectory ?filepath 
                 WHERE { 
@@ -132,8 +132,33 @@ def query_proven(simulation_name,url):
                  }
            
              """
-  
-    
+    req = urllib2.Request(url, query)
+    req.add_header("Content-Type", "text/plain")
+    req.add_header("Accept","application/json")
+
+    print query
+    response = urllib2.urlopen(req)
+    return response
+def get_sim_desc_output(simulation_name,url):
+ 
+
+ 
+ 
+    query = """SELECT DISTINCT ?logfile  ?sim ?idname ?filename ?parentdirectory ?filepath
+                             WHERE {
+                             GRAPH  <http://provenance.pnnl.gov/ns/proven#acme> {          
+                                     ?logfile <http://provenance.pnnl.gov/ns/proven#name>  ?idname .                                 
+                                     ?logfile <http://provenance.pnnl.gov/ns/proven#filename>  ?filename . 
+                                     ?logfile <http://provenance.pnnl.gov/ns/proven#parentdirectory> ?parentdirectory .
+                                     ?logfile <http://provenance.pnnl.gov/ns/proven#filepath>  ?filepath . 
+                                     ?logfile rdf:type <http://www.pnnl.gov/wfpp#LogFile> .     
+                                     ?logfile <http://www.pnnl.gov/wfpp#wasGeneratedBy>    ?sim  . 
+                                   {SELECT ?sim
+                                   WHERE { """
+    query = query + '?sim <http://provenance.pnnl.gov/ns/proven#name>  \"' + simulation_name  +  '\"^^<http://www.w3.org/2001/XMLSchema#string>  . \n'
+    query = query + '?sim rdf:type  <http://www.pnnl.gov/wfpp#Simulation> . \n'
+    query = query + "                                   }\n }\n } \n } \n"
+
     req = urllib2.Request(url, query)
     req.add_header("Content-Type", "text/plain")
     req.add_header("Accept","application/json")
@@ -158,9 +183,10 @@ simname = args.simname
 url = args.server
 url = url + "/proven/rest/v1/repository/sparql"
 
-response = query_proven(simname,url)
+response = get_sim_desc_input(simname,url)
 reconstruct_acme_files(response,targetdir)
-response = retrieve_description(simname,url)
-add_readme_file(response,targetdir)
-
+response2 = retrieve_description(simname,url)
+add_readme_file(response2,targetdir)
+response3 = get_sim_desc_output(simname,url)
+reconstruct_acme_files(response3,targetdir)
 
