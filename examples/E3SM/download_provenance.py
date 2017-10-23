@@ -85,7 +85,7 @@ def retrieve_description(simulation_name,url):
 
     query = """ SELECT ?simname ?compset ?res ?github_hashkey ?machine ?compiler ?scriptname 
                 WHERE { 
-                      GRAPH <http://provenance.pnnl.gov/ns/proven#acme> 
+                      GRAPH <http://provenance.pnnl.gov/ns/proven#e3sm> 
                            { 
                             ?subject <http://provenance.pnnl.gov/ns/proven#name>  ?simname .
                             ?subject <http://provenance.pnnl.gov/ns/proven#compset>  ?compset .
@@ -111,7 +111,7 @@ def get_sim_desc_input(simulation_name,url):
 
     query = """ SELECT ?simname ?idname ?filename ?parentdirectory ?filepath 
                 WHERE { 
-                      GRAPH <http://provenance.pnnl.gov/ns/proven#acme> 
+                      GRAPH <http://provenance.pnnl.gov/ns/proven#e3sm> 
                            { 
                             ?subject <http://provenance.pnnl.gov/ns/proven#name>  ?simname .
                             ?subject <http://www.pnnl.gov/wfpp#used> ?used .                      
@@ -146,7 +146,7 @@ def get_sim_desc_output(simulation_name,url):
  
     query = """SELECT DISTINCT ?logfile  ?sim ?idname ?filename ?parentdirectory ?filepath
                              WHERE {
-                             GRAPH  <http://provenance.pnnl.gov/ns/proven#acme> {          
+                             GRAPH  <http://provenance.pnnl.gov/ns/proven#e3sm> {          
                                      ?logfile <http://provenance.pnnl.gov/ns/proven#name>  ?idname .                                 
                                      ?logfile <http://provenance.pnnl.gov/ns/proven#filename>  ?filename . 
                                      ?logfile <http://provenance.pnnl.gov/ns/proven#parentdirectory> ?parentdirectory .
