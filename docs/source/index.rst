@@ -9,7 +9,10 @@ Welcome to Proven's documentation!
 .. toctree::
    :maxdepth: 2
    
-   overview/index   
+   overview/index
+   background/index
+   previous_campaigns/index
+   users_guide/index
    installing_proven/index
    proven_components/index
    license/license
