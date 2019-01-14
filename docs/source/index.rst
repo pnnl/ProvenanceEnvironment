@@ -11,7 +11,7 @@ Welcome to Proven's documentation!
    
    overview/index
    background/index
-   previous_campaigns/index
+   activities/index
    users_guide/index
    installing_proven/index
    proven_components/index
