@@ -12,7 +12,7 @@ June 27, 2018:  PNNL releases four module repostitories that represent Proven's 
 
 * https://github.com/pnnl/proven-docker
 
-The separate repostories were created to allow users to download modules specific to their needs.  Unfotunately github does not allow child repositories to exist under our original repository webstie.
+The separate repostories were created to allow users to download modules specific to their needs.  Unfortunately github does not allow child repositories to exist under our original repository webstie.
 
 The original website:  https://github.com/pnnl/ProvenanceEnvironment will remain the main website and should be cited or referenced.
 
