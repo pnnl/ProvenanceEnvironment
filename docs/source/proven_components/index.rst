@@ -3,3 +3,7 @@
 
 Proven Componenets
 ==================
+
+.. include:: proven_components.rst
+
+

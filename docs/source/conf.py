@@ -20,8 +20,8 @@ from recommonmark.parser import CommonMarkParser
 # -- Project information -----------------------------------------------------
 
 project = u'Proven'
-copyright = u'2018, Bibi Raju, Eric Stephan, Todd Elsethagen'
-author = u'Bibi Raju, Eric Stephan, Todd Elsethagen'
+copyright = u'2017, Battelle Memorial Institute All rights reserved.'
+author = u'Bibi Mathew, Eric Stephan, Todd Elsethagen'
 
 # The short X.Y version
 version = u''
@@ -40,6 +40,7 @@ release = u'2.0'
 # ones.
 extensions = [
     'sphinx.ext.ifconfig',
+    'recommonmark'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -134,7 +135,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Proven.tex', u'Proven Documentation',
-     u'Bibi Raju, Eric Stephan, Todd Elsethagen', 'manual'),
+     u'Bibi Mathew, Eric Stephan, Todd Elsethagen', 'manual'),
 ]
 
 

@@ -15,6 +15,7 @@ Welcome to Proven's documentation!
    users_guide/index
    installing_proven/index
    proven_components/index
+   research_areas/index
    license/license
    
 

@@ -10,5 +10,3 @@ Scientific Workflow Reproducibility
 Power Grid Simulation Data Management
 -------------------------------------
 
-Look Ahead in 2019
-------------------
